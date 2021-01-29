@@ -31,6 +31,12 @@ func makeUser() User {
 	}
 }
 
+func isNotSet(u User) bool {
+	return u.ID != id || u.FirstName == nil || u.LastName == nil ||
+		u.Username == nil || u.PhotoURL == nil || u.AuthDate == 0 ||
+		u.Hash == ""
+}
+
 func TestFromValues(t *testing.T) {
 	v := make(url.Values, 7)
 	v[keyID] = []string{strconv.Itoa(id)}
@@ -40,12 +46,8 @@ func TestFromValues(t *testing.T) {
 	v[keyPhotoURL] = []string{photoURL}
 	v[keyAuthDate] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
 	v[keyHash] = []string{"a"}
-	u, err := FromValues(v)
-	if err != nil || u.ID != id || u.FirstName == nil || u.LastName == nil ||
-		u.Username == nil || u.PhotoURL == nil || u.AuthDate == 0 ||
-		u.Hash == "" {
-
-		t.Fatal(err)
+	if isNotSet(FromValues(v)) {
+		t.FailNow()
 	}
 }
 
@@ -61,12 +63,8 @@ func TestFromReader(t *testing.T) {
 			"hash": "a"
 		}
 	`
-	u, err := FromReader(strings.NewReader(data))
-	if err != nil || u.ID != id || u.FirstName == nil || u.LastName == nil ||
-		u.Username == nil || u.PhotoURL == nil || u.AuthDate == 0 ||
-		u.Hash == "" {
-
-		t.Fatal(err)
+	if isNotSet(FromReader(strings.NewReader(data))) {
+		t.FailNow()
 	}
 }
 

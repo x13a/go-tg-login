@@ -40,43 +40,42 @@ type User struct {
 	Hash      string  `json:"hash"`
 }
 
-func (u *User) FromValues(vals url.Values) (err error) {
+func (u *User) FromValues(vals url.Values) {
 	for k, vs := range vals {
 		if len(vs) == 0 {
 			continue
 		}
 		switch k {
 		case keyID:
-			if u.ID, err = strconv.Atoi(vs[0]); err != nil {
-				return
-			}
+			u.ID, _ = strconv.Atoi(vs[0])
 		case keyFirstName:
-			u.FirstName = &vs[0]
+			firstName := vs[0]
+			u.FirstName = &firstName
 		case keyLastName:
-			u.LastName = &vs[0]
+			lastName := vs[0]
+			u.LastName = &lastName
 		case keyUsername:
-			u.Username = &vs[0]
+			username := vs[0]
+			u.Username = &username
 		case keyPhotoURL:
-			u.PhotoURL = &vs[0]
+			photoURL := vs[0]
+			u.PhotoURL = &photoURL
 		case keyAuthDate:
-			if u.AuthDate, err = strconv.ParseInt(vs[0], 10, 64); err != nil {
-				return
-			}
+			u.AuthDate, _ = strconv.ParseInt(vs[0], 10, 64)
 		case keyHash:
 			u.Hash = vs[0]
 		}
 	}
-	return nil
 }
 
-func (u *User) FromReader(r io.Reader) error {
-	return json.NewDecoder(r).Decode(u)
+func (u *User) FromReader(r io.Reader) {
+	json.NewDecoder(r).Decode(u)
 }
 
 func (u User) Check(token string) error {
 	mac1, err := hex.DecodeString(u.Hash)
 	if err != nil {
-		return err
+		return ErrInvalidHash
 	}
 	if !hmac.Equal(mac1, u.calc(token)) {
 		return ErrInvalidHash
@@ -128,12 +127,14 @@ func (u User) build() string {
 	return b.String()
 }
 
-func FromValues(vals url.Values) (User, error) {
+func FromValues(vals url.Values) User {
 	var user User
-	return user, user.FromValues(vals)
+	user.FromValues(vals)
+	return user
 }
 
-func FromReader(r io.Reader) (User, error) {
+func FromReader(r io.Reader) User {
 	var user User
-	return user, user.FromReader(r)
+	user.FromReader(r)
+	return user
 }
