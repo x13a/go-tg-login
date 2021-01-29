@@ -88,10 +88,18 @@ func (u User) DateCheck(token string) error {
 	if err := u.Check(token); err != nil {
 		return err
 	}
-	if time.Unix(u.AuthDate, 0).Add(OutdatedLimit).Before(time.Now()) {
+	if u.IsOutdated() {
 		return ErrIsOutdated
 	}
 	return nil
+}
+
+func (u User) AuthTime() time.Time {
+	return time.Unix(u.AuthDate, 0)
+}
+
+func (u User) IsOutdated() bool {
+	return u.AuthTime().Add(OutdatedLimit).Before(time.Now())
 }
 
 func (u User) calc(token string) []byte {
