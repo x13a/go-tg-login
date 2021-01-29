@@ -9,5 +9,4 @@ $ go get -u github.com/x13a/go-tg-login
 ```
 
 ## Friends
-
--[telegram-login-rs](https://github.com/jtfell/telegram-login-rs)
+- [telegram-login-rs](https://github.com/jtfell/telegram-login-rs)
