@@ -40,30 +40,30 @@ type User struct {
 	Hash      string  `json:"hash"`
 }
 
-func (u *User) FromValues(vals url.Values) {
-	for k, vs := range vals {
-		if len(vs) == 0 {
+func (u *User) FromValues(vs url.Values) {
+	for k, l := range vs {
+		if len(l) == 0 {
 			continue
 		}
 		switch k {
 		case keyID:
-			u.ID, _ = strconv.Atoi(vs[0])
+			u.ID, _ = strconv.Atoi(l[0])
 		case keyFirstName:
-			firstName := vs[0]
-			u.FirstName = &firstName
+			v1 := l[0]
+			u.FirstName = &v1
 		case keyLastName:
-			lastName := vs[0]
-			u.LastName = &lastName
+			v2 := l[0]
+			u.LastName = &v2
 		case keyUsername:
-			username := vs[0]
-			u.Username = &username
+			v3 := l[0]
+			u.Username = &v3
 		case keyPhotoURL:
-			photoURL := vs[0]
-			u.PhotoURL = &photoURL
+			v4 := l[0]
+			u.PhotoURL = &v4
 		case keyAuthDate:
-			u.AuthDate, _ = strconv.ParseInt(vs[0], 10, 64)
+			u.AuthDate, _ = strconv.ParseInt(l[0], 10, 64)
 		case keyHash:
-			u.Hash = vs[0]
+			u.Hash = l[0]
 		}
 	}
 }
@@ -127,9 +127,9 @@ func (u User) build() string {
 	return b.String()
 }
 
-func FromValues(vals url.Values) User {
+func FromValues(vs url.Values) User {
 	var user User
-	user.FromValues(vals)
+	user.FromValues(vs)
 	return user
 }
 
