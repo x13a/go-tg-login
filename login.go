@@ -24,6 +24,7 @@ const (
 )
 
 var (
+	ErrNotFilled   = errors.New("not filled")
 	ErrInvalidHash = errors.New("invalid hash")
 	ErrIsOutdated  = errors.New("is outdated")
 
@@ -73,6 +74,9 @@ func (u *User) FromReader(r io.Reader) {
 }
 
 func (u User) Check(token string) error {
+	if u.ID == 0 || u.AuthDate == 0 || u.Hash == "" {
+		return ErrNotFilled
+	}
 	mac1, err := hex.DecodeString(u.Hash)
 	if err != nil {
 		return ErrInvalidHash
