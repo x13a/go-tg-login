@@ -32,7 +32,7 @@ var (
 )
 
 type User struct {
-	ID        int     `json:"id"`
+	ID        int64   `json:"id"`
 	FirstName *string `json:"first_name"`
 	LastName  *string `json:"last_name"`
 	Username  *string `json:"username"`
@@ -48,7 +48,7 @@ func (u *User) FromValues(vs url.Values) {
 		}
 		switch k {
 		case keyID:
-			u.ID, _ = strconv.Atoi(l[0])
+			u.ID, _ = strconv.ParseInt(l[0], 10, 64)
 		case keyFirstName:
 			v1 := l[0]
 			u.FirstName = &v1
@@ -118,7 +118,7 @@ func (u User) build() string {
 	if u.FirstName != nil {
 		b.WriteString("\n" + keyFirstName + "=" + *u.FirstName)
 	}
-	b.WriteString("\n" + keyID + "=" + strconv.Itoa(u.ID))
+	b.WriteString("\n" + keyID + "=" + strconv.FormatInt(u.ID, 10))
 	if u.LastName != nil {
 		b.WriteString("\n" + keyLastName + "=" + *u.LastName)
 	}

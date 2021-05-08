@@ -41,7 +41,7 @@ func hasNotSet(u User) bool {
 
 func TestFromValues(t *testing.T) {
 	v := make(url.Values, 7)
-	v[keyID] = []string{strconv.Itoa(id)}
+	v[keyID] = []string{strconv.FormatInt(id, 10)}
 	v[keyFirstName] = []string{firstName}
 	v[keyLastName] = []string{lastName}
 	v[keyUsername] = []string{username}
